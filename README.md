@@ -147,5 +147,7 @@ This repo demonstrate the basic steps for  setting up self-signed Certificate an
 
 * Don't forget to restart both node_exporter and prometheus
 
+* The basic Auth can be done by a proxy like Nginx or apache also.
+
 * VOILA, You are ready to go.
   
