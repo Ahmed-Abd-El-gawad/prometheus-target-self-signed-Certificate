@@ -113,5 +113,39 @@ This repo demonstrate the basic steps for  setting up self-signed Certificate be
   sudo systemctl restart prometheus.service
   ```
 
+* Add basic Auth for the node exporter by creating username: prometheus and password: prometheus
+
+* genertate the password hash by using the following link https://o11y.tools/pwgen/
+
+  Prometheus needs passwords hashed with bcrypt. This tool hashes the passwords directly in your browser, in such a way that we do not receive the passwords you are generating.
+
+* Now edit the config.yml for the node exporter
+
+  ```yml
+  tls_server_config:
+    cert_file: node_exporter.crt
+    key_file: node_exporter.key
+  basic_auth_users:
+    prometheus: $2a$10$ptqLNY/JlTMYKHO7AWNdNO2W3ZlJ5h1R6xYZktjS2EUjw.x5R4IUe
+  ```
+
+* Now edit the promethues configuration
+
+  ```yml
+  - job_name: 'Linux Server'
+      scheme: https
+      basic_auth:
+        username: prometheus
+        password: prometheus
+      tls_config:
+        ca_file: /etc/prometheus/node_exporter.crt
+        insecure_skip_verify: true
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['192.168.216.129:9100']
+  ```
+
+* Don't forget to restart both node_exporter and prometheus
+
 * VOILA, You are ready to go.
   
